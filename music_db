@@ -1,0 +1,29 @@
+psql -U postgres
+CREATE DATABASE music_db;
+ALTER DATABASE music_db OWNER TO postgres;
+
+CREATE TABLE IF NOT EXISTS artists (
+id serial primary key,
+name varchar(100) not null
+);
+
+CREATE TABLE IF NOT EXISTS albums (
+id serial primary key,
+album_title varchar(100) not null,
+release_date integer,
+artist_id integer references artists(id)
+);
+
+CREATE TABLE IF NOT EXISTS tracks (
+id serial primary key,
+track_title varchar(100) not null,
+duration integer,
+album_id integer references albums(id)
+);
+
+CREATE TABLE IF NOT EXISTS genres (
+id serial primary key,
+genre_name varchar(100) not null
+);
+
+ALTER TABLE artists ADD COLUMN genre_id integer references genres(id);
