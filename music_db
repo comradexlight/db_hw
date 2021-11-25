@@ -27,3 +27,32 @@ genre_name varchar(100) not null
 );
 
 ALTER TABLE artists ADD COLUMN genre_id integer references genres(id);
+
+#тут начало кода для домашнего задания к 3му заданию
+
+ALTER TABLE albums DROP COLUMN artist_id;
+
+ALTER TABLE artists DROP COLUMN genre_id;
+
+CREATE TABLE IF NOT EXISTS collections (
+id serial primary key,
+collection_title varchar(100) not null
+);
+
+CREATE TABLE IF NOT EXISTS ArtistGenre (
+id serial primary key,
+artist_id integer not null references artists(id),
+genre_id integer not null references genres(id)
+);
+
+CREATE TABLE IF NOT EXISTS ArtistAlbum (
+id serial primary key,
+artist_id integer not null references artists(id),
+album_id integer not null references albums(id)
+);
+
+CREATE TABLE IF NOT EXISTS CollectionTrack (
+id serial primary key,
+collection_id integer not null references collections(id),
+track_id integer not null references tracks(id)
+);
