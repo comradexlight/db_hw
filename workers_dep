@@ -3,18 +3,12 @@ ALTER DATABASE workers_db OWNER TO postgres;
 
 CREATE TABLE IF NOT EXISTS workers (
 id serial primary key,
-name varchar(100) not null
+name varchar(30) not null,
+departament varchar(70),
+id_head integer references workers(id)
 );
 
 CREATE TABLE IF NOT EXISTS departments (
 id serial primary key,
-dep_name varchar(100) not null,
-head_id integer references workers(id)
-);
-
-ALTER TABLE workers ADD COLUMN dep_id integer references departments(id);
-
-CREATE TABLE IF NOT EXISTS head (
-id_head integer references workers(id),
-id_workers integer references workers(id)
+dep_name varchar(100) not null
 );

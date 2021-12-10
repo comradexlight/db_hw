@@ -56,3 +56,7 @@ id serial primary key,
 collection_id integer not null references collections(id),
 track_id integer not null references tracks(id)
 );
+
+# тут начало кода, чтобы БД соответствовала SELECT запросам по домашнему заданию
+
+ALTER TABLE collections ADD COLUMN release_date integer;
