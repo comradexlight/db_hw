@@ -7,7 +7,7 @@ def auth():
     headers = {
         'Content-Type': 'application/hw4_for_psql',
         'Authorization':
-            'OAuth oauth_consumer_key="my_consumer_key ", \
+            'OAuth oauth_consumer_key="my_cons_key", \
             oauth_nonce="timestamp",\
             oauth_signature="my_secret_key&",\
             oauth_signature_method="PLAINTEXT", \
@@ -35,7 +35,7 @@ def upload(artist_id_from_discogs):
     headers = {
         'Content-Type': 'application/hw4_for_psql',
         'Authorization':
-            'OAuth oauth_consumer_key="my_consumer_key ", \
+            'OAuth oauth_consumer_key="my_cons_key", \
             oauth_nonce="timestamp",\
             oauth_signature="my_secret_key&",\
             oauth_signature_method="PLAINTEXT", \
@@ -95,7 +95,7 @@ def upload(artist_id_from_discogs):
             connection.execute(
                 f"INSERT INTO tracks(track_title, duration, album_id) VALUES('{track[0]}', {track[1]}, {album_id});")
             print(f'Добавлен трэк {track[0]}')
-        connection.execute(f"INSERT INTO ArtistGenre(artist_id, genre_id) VALUES({artist_id}, {genre_id});")
+    connection.execute(f"INSERT INTO ArtistGenre(artist_id, genre_id) VALUES({artist_id}, {genre_id});")
     for va in v_as:
         va_id = search_id('collections', 'collection_title', va[0])
         if va_id is None:
