@@ -1,0 +1,68 @@
+# 1. количество исполнителей в каждом жанре;
+SELECT genre_name, COUNT(artist_id)
+FROM genres
+JOIN ArtistGenre ON genres.id = ArtistGenre.genre_id
+GROUP by genres.genre_name;
+
+# 2. количество треков, вошедших в альбомы 2019-2020 годов;
+SELECT COUNT(tracks.id) FROM tracks
+JOIN albums ON tracks.album_id = albums.id
+WHERE albums.release_date BETWEEN 2019 AND 2020;
+
+# 3. средняя продолжительность треков по каждому альбому;
+SELECT album_title, AVG(duration) FROM albums
+JOIN tracks ON albums.id = tracks.album_id
+GROUP BY albums.album_title;
+
+# 4. все исполнители, которые не выпустили альбомы в 2020 году;
+SELECT DISTINCT name FROM artists
+JOIN ArtistAlbum ON artists.id = ArtistAlbum.artist_id
+JOIN albums ON ArtistAlbum.album_id = albums.id
+WHERE release_date != 2020;
+
+# 5. названия сборников, в которых присутствует конкретный исполнитель (выберите сами);
+SELECT DISTINCT collection_title FROM collections
+JOIN CollectionTrack ON collections.id = CollectionTrack.collection_id
+JOIN tracks ON CollectionTrack.track_id = tracks.id
+JOIN albums ON tracks.album_id = albums.id
+JOIN ArtistAlbum ON albums.id = ArtistAlbum.album_id
+JOIN artists ON ArtistAlbum.artist_id = artists.id
+WHERE artists.name = 'Embrace';
+
+
+# для задания №6 добавим ещё один жанр и прикрутим его к артисту:
+
+INSERT INTO genres(genre_name) VALUES('Emo');
+INSERT INTO ArtistGenre(artist_id, genre_id) VALUES(4, 7);
+
+6. название альбомов, в которых присутствуют исполнители более 1 жанра;
+
+SELECT album_title
+FROM (
+SELECT album_title, COUNT(album_title) FROM albums
+JOIN ArtistAlbum ON albums.id = ArtistAlbum.album_id
+JOIN artists ON ArtistAlbum.artist_id = artists.id
+JOIN ArtistGenre ON artists.id = ArtistGenre.artist_id
+JOIN genres ON ArtistGenre.genre_id = genres.id
+GROUP BY album_title) AS X
+WHERE count >= 2;
+
+#7. наименование треков, которые не входят в сборники;
+SELECT track_title FROM tracks
+RIGHT JOIN CollectionTrack ON tracks.id = CollectionTrack.track_id;
+
+#8. исполнителя(-ей), написавшего самый короткий по продолжительности трек (теоретически таких треков может быть несколько);
+SELECT DISTINCT name FROM artists
+JOIN ArtistAlbum ON artists.id = ArtistAlbum.artist_id
+JOIN albums ON ArtistAlbum.album_id = albums.id
+JOIN tracks ON albums.id = tracks.album_id
+WHERE duration = (SELECT MIN(tracks.duration) FROM tracks);
+
+#9. название альбомов, содержащих наименьшее количество треков.
+SELECT album_title 
+FROM (
+SELECT album_title, COUNT(tracks.album_id), MIN(COUNT(tracks.album_id)) OVER () min_count
+  FROM albums JOIN tracks ON albums.id = tracks.album_id
+GROUP BY album_title 
+) AS X
+WHERE count = min_count;
